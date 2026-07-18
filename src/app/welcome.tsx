@@ -1,61 +1,58 @@
-import { Link } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { Button } from '@/components/ui/button';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export default function WelcomeScreen() {
+  const router = useRouter();
   const theme = useTheme();
 
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <View style={styles.welcome}>
-          <View style={styles.brandMark}>
-            <ThemedText style={styles.brandMarkText}>C</ThemedText>
-          </View>
+        <ScrollView
+          alwaysBounceVertical={false}
+          contentInsetAdjustmentBehavior="automatic"
+          contentContainerStyle={styles.contentContainer}>
+          <View style={styles.welcome}>
+            <View
+              style={[styles.brandMark, { backgroundColor: theme.primary }]}>
+              <ThemedText
+                themeColor="onPrimary"
+                style={styles.brandMarkText}>
+                C
+              </ThemedText>
+            </View>
 
-          <View style={styles.copy}>
-            <ThemedText type="subtitle" style={styles.centeredText}>
-              Welcome
-            </ThemedText>
-            <ThemedText
-              themeColor="textSecondary"
-              style={styles.centeredText}>
-              Sign in to continue, or create an account to get started.
-            </ThemedText>
-          </View>
+            <View style={styles.copy}>
+              <ThemedText type="subtitle" style={styles.centeredText}>
+                Welcome
+              </ThemedText>
+              <ThemedText
+                themeColor="textSecondary"
+                style={styles.centeredText}>
+                Sign in to continue, or create an account to get started.
+              </ThemedText>
+            </View>
 
-          <View style={styles.actions}>
-            <Link href="/sign-in" asChild>
-              <Pressable
-                style={({ pressed }) => [
-                  styles.button,
-                  styles.primaryButton,
-                  pressed && styles.pressed,
-                ]}>
-                <ThemedText style={styles.primaryButtonText}>
-                  Sign in
-                </ThemedText>
-              </Pressable>
-            </Link>
-
-            <Link href="/sign-up" asChild>
-              <Pressable
-                style={({ pressed }) => [
-                  styles.button,
-                  styles.secondaryButton,
-                  { borderColor: theme.backgroundSelected },
-                  pressed && styles.pressed,
-                ]}>
-                <ThemedText type="smallBold">Create account</ThemedText>
-              </Pressable>
-            </Link>
+            <View style={styles.actions}>
+              <Button
+                label="Sign in"
+                onPress={() => router.push('/sign-in')}
+              />
+              <Button
+                label="Create account"
+                onPress={() => router.push('/sign-up')}
+                variant="secondary"
+              />
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </ThemedView>
   );
@@ -67,8 +64,12 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
+  },
+  contentContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: Spacing.five,
+    paddingVertical: Spacing.four,
   },
   welcome: {
     width: '100%',
@@ -83,10 +84,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,
-    backgroundColor: '#6C47FF',
+    borderCurve: 'continuous',
   },
   brandMarkText: {
-    color: '#FFFFFF',
     fontSize: 32,
     lineHeight: 38,
     fontWeight: '700',
@@ -101,25 +101,5 @@ const styles = StyleSheet.create({
   actions: {
     width: '100%',
     gap: Spacing.three,
-  },
-  button: {
-    minHeight: 52,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: Spacing.four,
-  },
-  primaryButton: {
-    backgroundColor: '#6C47FF',
-  },
-  primaryButtonText: {
-    color: '#FFFFFF',
-    fontWeight: '600',
-  },
-  secondaryButton: {
-    borderWidth: StyleSheet.hairlineWidth,
-  },
-  pressed: {
-    opacity: 0.72,
   },
 });

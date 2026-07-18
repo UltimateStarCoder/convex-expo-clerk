@@ -3,9 +3,9 @@ import { useConvexAuth } from 'convex/react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AccountButton } from '@/components/account-button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { UserButton } from '@/components/user-button';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 
 export default function HomeScreen() {
@@ -22,7 +22,7 @@ export default function HomeScreen() {
             <ThemedText type="smallBold">Clerk + Convex</ThemedText>
           </View>
 
-          <AccountButton />
+        <UserButton />
         </View>
 
         {isLoading ? (

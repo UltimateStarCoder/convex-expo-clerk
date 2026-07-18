@@ -1,17 +1,17 @@
-import { AuthView } from '@clerk/expo/native';
+import { AuthView as ClerkAuthView } from '@clerk/expo/native';
 import { StyleSheet, View } from 'react-native';
 
 type AuthMode = 'signIn' | 'signUp';
 
-type AuthScreenProps = {
+type AuthViewProps = {
   mode: AuthMode;
   onDismiss: () => void;
 };
 
-export function AuthScreen({ mode, onDismiss }: AuthScreenProps) {
+export function AuthView({ mode, onDismiss }: AuthViewProps) {
   return (
     <View style={styles.container}>
-      <AuthView mode={mode} onDismiss={onDismiss} />
+      <ClerkAuthView mode={mode} onDismiss={onDismiss} />
     </View>
   );
 }
