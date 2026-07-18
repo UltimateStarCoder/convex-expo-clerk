@@ -9,12 +9,7 @@ export default function SignInScreen() {
   const router = useRouter();
 
   function returnToWelcome() {
-    if (router.canGoBack()) {
-      router.back();
-      return;
-    }
-
-    router.replace('/welcome');
+    router.dismissTo('/welcome');
   }
 
   return (
