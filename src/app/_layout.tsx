@@ -9,17 +9,22 @@ import { useColorScheme } from 'react-native';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 
-const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
-const convexUrl = process.env.EXPO_PUBLIC_CONVEX_URL;
+function requirePublicEnv(value: string | undefined, name: string) {
+  if (!value) {
+    throw new Error(`Missing ${name} in .env.local`);
+  }
 
-if (!publishableKey) {
-  throw new Error('Missing EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in .env.local');
+  return value;
 }
 
-if (!convexUrl) {
-  throw new Error('Missing EXPO_PUBLIC_CONVEX_URL in .env.local');
-}
-
+const publishableKey = requirePublicEnv(
+  process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY,
+  'EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY',
+);
+const convexUrl = requirePublicEnv(
+  process.env.EXPO_PUBLIC_CONVEX_URL,
+  'EXPO_PUBLIC_CONVEX_URL',
+);
 const convex = new ConvexReactClient(convexUrl);
 
 SplashScreen.preventAutoHideAsync();
