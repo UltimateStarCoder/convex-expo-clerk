@@ -9,6 +9,10 @@ import { useColorScheme } from 'react-native';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 
+export const unstable_settings = {
+  anchor: 'welcome',
+};
+
 function requirePublicEnv(value: string | undefined, name: string) {
   if (!value) {
     throw new Error(`Missing ${name} in .env.local`);
@@ -55,7 +59,9 @@ function RootNavigator() {
       <AnimatedSplashOverlay />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Protected guard={!isSignedIn}>
+          <Stack.Screen name="welcome" />
           <Stack.Screen name="sign-in" />
+          <Stack.Screen name="sign-up" />
         </Stack.Protected>
 
         <Stack.Protected guard={isSignedIn}>

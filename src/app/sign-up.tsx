@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AuthScreen } from '@/components/auth-screen';
 import { ThemedView } from '@/components/themed-view';
 
-export default function SignInScreen() {
+export default function SignUpScreen() {
   const router = useRouter();
 
   function returnToWelcome() {
@@ -20,7 +20,7 @@ export default function SignInScreen() {
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <AuthScreen mode="signIn" onDismiss={returnToWelcome} />
+        <AuthScreen mode="signUp" onDismiss={returnToWelcome} />
       </SafeAreaView>
     </ThemedView>
   );
