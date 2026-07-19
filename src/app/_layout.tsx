@@ -66,6 +66,13 @@ function RootNavigator() {
 
         <Stack.Protected guard={isSignedIn}>
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen
+            name="profile"
+            options={{
+              headerShown: false,
+              presentation: 'modal',
+            }}
+          />
         </Stack.Protected>
       </Stack>
     </>

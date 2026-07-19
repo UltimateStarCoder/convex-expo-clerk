@@ -1,32 +1,22 @@
-import { useUser } from '@clerk/expo';
+import { useClerk, useUser } from '@clerk/expo';
 import { useConvexAuth } from 'convex/react';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { UserButton } from '@/components/user-button';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 
 export default function HomeScreen() {
   const { isAuthenticated, isLoading } = useConvexAuth();
+  const { signOut } = useClerk();
+  const router = useRouter();
 
   return (
     <>
       <ThemedView style={styles.container}>
         <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeArea}>
-          <View style={styles.header}>
-            <View style={styles.brand}>
-              <View style={styles.brandMark}>
-                <ThemedText style={styles.brandMarkText}>C</ThemedText>
-              </View>
-              <ThemedText type="smallBold">Clerk + Convex</ThemedText>
-            </View>
-
-            <UserButton />
-          </View>
-
           {isLoading ? (
             <LoadingState />
           ) : isAuthenticated ? (
@@ -47,6 +37,19 @@ export default function HomeScreen() {
           <Stack.Toolbar.MenuAction
             onPress={() => Alert.alert('Settings', 'Settings action selected.')}>
             Settings
+          </Stack.Toolbar.MenuAction>
+        </Stack.Toolbar.Menu>
+        <Stack.Toolbar.Menu icon="person.crop.circle">
+          <Stack.Toolbar.MenuAction
+            icon="person.crop.circle"
+            onPress={() => router.push('/profile')}>
+            Manage account
+          </Stack.Toolbar.MenuAction>
+          <Stack.Toolbar.MenuAction
+            destructive
+            icon="rectangle.portrait.and.arrow.right"
+            onPress={() => void signOut()}>
+            Sign out
           </Stack.Toolbar.MenuAction>
         </Stack.Toolbar.Menu>
       </Stack.Toolbar>
@@ -124,29 +127,6 @@ const styles = StyleSheet.create({
     maxWidth: MaxContentWidth,
     paddingHorizontal: Spacing.four,
     paddingBottom: BottomTabInset + Spacing.three,
-  },
-  header: {
-    minHeight: 72,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  brand: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-  },
-  brandMark: {
-    width: 32,
-    height: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 10,
-    backgroundColor: '#6C47FF',
-  },
-  brandMarkText: {
-    color: '#FFFFFF',
-    fontWeight: '800',
   },
   centered: {
     flex: 1,
