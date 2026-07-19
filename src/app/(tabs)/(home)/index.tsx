@@ -33,12 +33,6 @@ export default function HomeScreen() {
           icon="plus"
           onPress={() => Alert.alert('Add', 'Add action selected.')}
         />
-        <Stack.Toolbar.Menu icon="ellipsis">
-          <Stack.Toolbar.MenuAction
-            onPress={() => Alert.alert('Settings', 'Settings action selected.')}>
-            Settings
-          </Stack.Toolbar.MenuAction>
-        </Stack.Toolbar.Menu>
         <Stack.Toolbar.Menu icon="person.crop.circle">
           <Stack.Toolbar.MenuAction
             icon="person.crop.circle"
