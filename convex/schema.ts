@@ -10,7 +10,9 @@ export default defineSchema({
     imageUrl: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
-  }).index('by_tokenIdentifier', ['tokenIdentifier']),
+  })
+    .index('by_tokenIdentifier', ['tokenIdentifier'])
+    .index('by_clerkUserId', ['clerkUserId']),
 
   items: defineTable({
     title: v.string(),

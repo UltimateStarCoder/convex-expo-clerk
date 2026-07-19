@@ -1,11 +1,7 @@
 import { v } from 'convex/values';
 
-import { mutation, query } from './_generated/server';
-import {
-  findCurrentUser,
-  getOrCreateCurrentUser,
-  identityProfile,
-} from './lib/auth';
+import { internalMutation, query } from './_generated/server';
+import { findCurrentUser } from './lib/auth';
 
 const userValidator = v.object({
   _id: v.id('users'),
@@ -41,23 +37,42 @@ export const current = query({
   },
 });
 
-export const storeCurrent = mutation({
-  args: {},
+export const upsertFromClerk = internalMutation({
+  args: {
+    tokenIdentifier: v.string(),
+    clerkUserId: v.string(),
+    name: v.optional(v.string()),
+    email: v.optional(v.string()),
+    imageUrl: v.optional(v.string()),
+  },
   returns: v.id('users'),
-  handler: async (ctx) => {
-    const user = await getOrCreateCurrentUser(ctx);
-    const identity = await ctx.auth.getUserIdentity();
+  handler: async (ctx, args) => {
+    const existingUser = await ctx.db
+      .query('users')
+      .withIndex('by_clerkUserId', (q) => q.eq('clerkUserId', args.clerkUserId))
+      .unique();
+    const now = Date.now();
 
-    if (!identity) {
-      throw new Error('You must be signed in.');
+    if (!existingUser) {
+      return await ctx.db.insert('users', {
+        tokenIdentifier: args.tokenIdentifier,
+        clerkUserId: args.clerkUserId,
+        name: args.name,
+        email: args.email,
+        imageUrl: args.imageUrl,
+        createdAt: now,
+        updatedAt: now,
+      });
     }
 
-    await ctx.db.patch('users', user._id, {
-      clerkUserId: identity.subject,
-      ...identityProfile(identity),
-      updatedAt: Date.now(),
+    await ctx.db.patch('users', existingUser._id, {
+      tokenIdentifier: args.tokenIdentifier,
+      name: args.name,
+      email: args.email,
+      imageUrl: args.imageUrl,
+      updatedAt: now,
     });
 
-    return user._id;
+    return existingUser._id;
   },
 });

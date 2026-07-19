@@ -17,14 +17,23 @@ export async function requireIdentity(ctx: AuthContext) {
 
 export async function findCurrentUser(ctx: AuthContext) {
   const identity = await requireIdentity(ctx);
-  const user = await ctx.db
+  const userByTokenIdentifier = await ctx.db
     .query('users')
     .withIndex('by_tokenIdentifier', (q) =>
       q.eq('tokenIdentifier', identity.tokenIdentifier),
     )
     .unique();
 
-  return { identity, user };
+  if (userByTokenIdentifier) {
+    return { identity, user: userByTokenIdentifier };
+  }
+
+  const userByClerkId = await ctx.db
+    .query('users')
+    .withIndex('by_clerkUserId', (q) => q.eq('clerkUserId', identity.subject))
+    .unique();
+
+  return { identity, user: userByClerkId };
 }
 
 export async function requireCurrentUser(ctx: AuthContext) {
