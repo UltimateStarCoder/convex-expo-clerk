@@ -1,6 +1,7 @@
 import { useUser } from '@clerk/expo';
 import { useConvexAuth } from 'convex/react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { Stack } from 'expo-router';
+import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
@@ -12,28 +13,44 @@ export default function HomeScreen() {
   const { isAuthenticated, isLoading } = useConvexAuth();
 
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.header}>
-          <View style={styles.brand}>
-            <View style={styles.brandMark}>
-              <ThemedText style={styles.brandMarkText}>C</ThemedText>
+    <>
+      <ThemedView style={styles.container}>
+        <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeArea}>
+          <View style={styles.header}>
+            <View style={styles.brand}>
+              <View style={styles.brandMark}>
+                <ThemedText style={styles.brandMarkText}>C</ThemedText>
+              </View>
+              <ThemedText type="smallBold">Clerk + Convex</ThemedText>
             </View>
-            <ThemedText type="smallBold">Clerk + Convex</ThemedText>
+
+            <UserButton />
           </View>
 
-        <UserButton />
-        </View>
+          {isLoading ? (
+            <LoadingState />
+          ) : isAuthenticated ? (
+            <SignedInContent />
+          ) : (
+            <LoadingState />
+          )}
+        </SafeAreaView>
+      </ThemedView>
 
-        {isLoading ? (
-          <LoadingState />
-        ) : isAuthenticated ? (
-          <SignedInContent />
-        ) : (
-          <LoadingState />
-        )}
-      </SafeAreaView>
-    </ThemedView>
+      <Stack.Title>Home</Stack.Title>
+      <Stack.Toolbar placement="right">
+        <Stack.Toolbar.Button
+          icon="plus"
+          onPress={() => Alert.alert('Add', 'Add action selected.')}
+        />
+        <Stack.Toolbar.Menu icon="ellipsis">
+          <Stack.Toolbar.MenuAction
+            onPress={() => Alert.alert('Settings', 'Settings action selected.')}>
+            Settings
+          </Stack.Toolbar.MenuAction>
+        </Stack.Toolbar.Menu>
+      </Stack.Toolbar>
+    </>
   );
 }
 

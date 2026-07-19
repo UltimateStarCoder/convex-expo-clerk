@@ -56,14 +56,14 @@ export default function ExploreScreen() {
         <ThemedView style={styles.sectionsWrapper}>
           <Collapsible title="File-based routing">
             <ThemedText type="small">
-              This app has two screens:{' '}
-              <ThemedText type="code">src/app/(tabs)/index.tsx</ThemedText> and{' '}
-              <ThemedText type="code">src/app/(tabs)/explore.tsx</ThemedText>
+              This app has two stack-backed tab screens:{' '}
+              <ThemedText type="code">src/app/(tabs)/(home)/index.tsx</ThemedText> and{' '}
+              <ThemedText type="code">src/app/(tabs)/(explore)/index.tsx</ThemedText>.
             </ThemedText>
             <ThemedText type="small">
-              The protected group layout in{' '}
-              <ThemedText type="code">src/app/(tabs)/_layout.tsx</ThemedText> sets up the native tab
-              navigator.
+              Each tab group has its own stack layout, while{' '}
+              <ThemedText type="code">src/app/(tabs)/_layout.tsx</ThemedText> sets up the native
+              tabs.
             </ThemedText>
             <ExternalLink href="https://docs.expo.dev/router/introduction">
               <ThemedText type="linkPrimary">Learn more</ThemedText>
