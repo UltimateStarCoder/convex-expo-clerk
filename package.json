@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@clerk/expo": "^3.7.8",
+    "@expo/material-symbols": "^0.1.1",
     "@expo/ui": "~57.0.7",
     "convex": "^1.42.3",
     "expo": "~57.0.7",

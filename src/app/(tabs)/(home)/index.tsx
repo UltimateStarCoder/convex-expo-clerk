@@ -1,4 +1,8 @@
 import { useClerk, useUser } from '@clerk/expo';
+import AccountCircleIcon from '@expo/material-symbols/account_circle.xml';
+import AddIcon from '@expo/material-symbols/add.xml';
+import LogoutIcon from '@expo/material-symbols/logout.xml';
+import ManageAccountsIcon from '@expo/material-symbols/manage_accounts.xml';
 import { useConvexAuth } from 'convex/react';
 import { Stack, useRouter } from 'expo-router';
 import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
@@ -30,18 +34,23 @@ export default function HomeScreen() {
       <Stack.Title>Home</Stack.Title>
       <Stack.Toolbar placement="right">
         <Stack.Toolbar.Button
-          icon="plus"
+          accessibilityLabel="Add"
+          icon={process.env.EXPO_OS === 'ios' ? 'plus' : AddIcon}
           onPress={() => Alert.alert('Add', 'Add action selected.')}
         />
-        <Stack.Toolbar.Menu icon="person.crop.circle">
+        <Stack.Toolbar.Menu
+          accessibilityLabel="Account"
+          icon={process.env.EXPO_OS === 'ios' ? 'person.crop.circle' : AccountCircleIcon}>
           <Stack.Toolbar.MenuAction
-            icon="person.crop.circle"
+            icon={process.env.EXPO_OS === 'ios' ? 'person.crop.circle' : ManageAccountsIcon}
             onPress={() => router.push('/profile')}>
             Manage account
           </Stack.Toolbar.MenuAction>
           <Stack.Toolbar.MenuAction
             destructive
-            icon="rectangle.portrait.and.arrow.right"
+            icon={
+              process.env.EXPO_OS === 'ios' ? 'rectangle.portrait.and.arrow.right' : LogoutIcon
+            }
             onPress={() => void signOut()}>
             Sign out
           </Stack.Toolbar.MenuAction>
