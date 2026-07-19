@@ -10,7 +10,7 @@ import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { toolbarIcons } from '@/constants/toolbar-icons';
 import { useTheme } from '@/hooks/use-theme';
 
-type Item = Omit<Doc<'items'>, 'ownerTokenIdentifier'>;
+type Item = Omit<Doc<'items'>, 'ownerId'>;
 
 export default function ItemsScreen() {
   const items = useQuery(api.items.list);

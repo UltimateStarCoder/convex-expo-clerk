@@ -1,8 +1,12 @@
 import { v } from 'convex/values';
 
 import type { Doc } from './_generated/dataModel';
-import type { MutationCtx, QueryCtx } from './_generated/server';
 import { mutation, query } from './_generated/server';
+import {
+  findCurrentUser,
+  getOrCreateCurrentUser,
+  requireCurrentUser,
+} from './lib/auth';
 
 const itemFields = {
   _id: v.id('items'),
@@ -18,16 +22,6 @@ const itemInputFields = {
   title: v.string(),
   description: v.string(),
 };
-
-async function requireOwnerTokenIdentifier(ctx: QueryCtx | MutationCtx) {
-  const identity = await ctx.auth.getUserIdentity();
-
-  if (!identity) {
-    throw new Error('You must be signed in.');
-  }
-
-  return identity.tokenIdentifier;
-}
 
 function normalizeItemInput(input: { title: string; description: string }) {
   const title = input.title.trim();
@@ -63,12 +57,15 @@ export const list = query({
   args: {},
   returns: v.array(itemValidator),
   handler: async (ctx) => {
-    const ownerTokenIdentifier = await requireOwnerTokenIdentifier(ctx);
+    const { user } = await findCurrentUser(ctx);
+
+    if (!user) {
+      return [];
+    }
+
     const items = await ctx.db
       .query('items')
-      .withIndex('by_ownerTokenIdentifier_and_updatedAt', (q) =>
-        q.eq('ownerTokenIdentifier', ownerTokenIdentifier),
-      )
+      .withIndex('by_ownerId_and_updatedAt', (q) => q.eq('ownerId', user._id))
       .order('desc')
       .take(100);
 
@@ -80,10 +77,10 @@ export const get = query({
   args: { id: v.id('items') },
   returns: v.union(itemValidator, v.null()),
   handler: async (ctx, args) => {
-    const ownerTokenIdentifier = await requireOwnerTokenIdentifier(ctx);
+    const { user } = await findCurrentUser(ctx);
     const item = await ctx.db.get('items', args.id);
 
-    if (!item || item.ownerTokenIdentifier !== ownerTokenIdentifier) {
+    if (!user || !item || item.ownerId !== user._id) {
       return null;
     }
 
@@ -95,13 +92,13 @@ export const create = mutation({
   args: itemInputFields,
   returns: v.id('items'),
   handler: async (ctx, args) => {
-    const ownerTokenIdentifier = await requireOwnerTokenIdentifier(ctx);
+    const user = await getOrCreateCurrentUser(ctx);
     const input = normalizeItemInput(args);
     const now = Date.now();
 
     return await ctx.db.insert('items', {
       ...input,
-      ownerTokenIdentifier,
+      ownerId: user._id,
       createdAt: now,
       updatedAt: now,
     });
@@ -115,10 +112,10 @@ export const update = mutation({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const ownerTokenIdentifier = await requireOwnerTokenIdentifier(ctx);
+    const user = await requireCurrentUser(ctx);
     const item = await ctx.db.get('items', args.id);
 
-    if (!item || item.ownerTokenIdentifier !== ownerTokenIdentifier) {
+    if (!item || item.ownerId !== user._id) {
       throw new Error('Item not found.');
     }
 
@@ -136,10 +133,10 @@ export const remove = mutation({
   args: { id: v.id('items') },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const ownerTokenIdentifier = await requireOwnerTokenIdentifier(ctx);
+    const user = await requireCurrentUser(ctx);
     const item = await ctx.db.get('items', args.id);
 
-    if (!item || item.ownerTokenIdentifier !== ownerTokenIdentifier) {
+    if (!item || item.ownerId !== user._id) {
       throw new Error('Item not found.');
     }
 

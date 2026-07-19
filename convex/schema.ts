@@ -2,14 +2,21 @@ import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
 
 export default defineSchema({
+  users: defineTable({
+    tokenIdentifier: v.string(),
+    clerkUserId: v.string(),
+    name: v.optional(v.string()),
+    email: v.optional(v.string()),
+    imageUrl: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index('by_tokenIdentifier', ['tokenIdentifier']),
+
   items: defineTable({
     title: v.string(),
     description: v.string(),
-    ownerTokenIdentifier: v.string(),
+    ownerId: v.id('users'),
     createdAt: v.number(),
     updatedAt: v.number(),
-  }).index('by_ownerTokenIdentifier_and_updatedAt', [
-    'ownerTokenIdentifier',
-    'updatedAt',
-  ]),
+  }).index('by_ownerId_and_updatedAt', ['ownerId', 'updatedAt']),
 });
