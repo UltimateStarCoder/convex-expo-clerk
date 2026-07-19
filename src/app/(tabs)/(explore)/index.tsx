@@ -1,7 +1,8 @@
 import { useClerk } from '@clerk/expo';
 import { Image } from 'expo-image';
 import { Stack, useRouter } from 'expo-router';
-import { Linking, Platform, ScrollView, StyleSheet } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
+import { Platform, ScrollView, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ExternalLink } from '@/components/external-link';
@@ -108,7 +109,7 @@ export default function ExploreScreen() {
         <Stack.Toolbar.Button
           accessibilityLabel="Expo documentation"
           icon={toolbarIcons.documentation}
-          onPress={() => void Linking.openURL('https://docs.expo.dev')}>
+          onPress={() => void WebBrowser.openBrowserAsync('https://docs.expo.dev')}>
           Docs
         </Stack.Toolbar.Button>
         <Stack.Toolbar.Menu accessibilityLabel="Account" icon={toolbarIcons.account}>
