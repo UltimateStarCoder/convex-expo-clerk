@@ -1,8 +1,4 @@
 import { useClerk } from '@clerk/expo';
-import AccountCircleIcon from '@expo/material-symbols/account_circle.xml';
-import DescriptionIcon from '@expo/material-symbols/description.xml';
-import LogoutIcon from '@expo/material-symbols/logout.xml';
-import ManageAccountsIcon from '@expo/material-symbols/manage_accounts.xml';
 import { Image } from 'expo-image';
 import { Stack, useRouter } from 'expo-router';
 import { Linking, Platform, ScrollView, StyleSheet } from 'react-native';
@@ -13,6 +9,7 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Collapsible } from '@/components/ui/collapsible';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { toolbarIcons } from '@/constants/toolbar-icons';
 import { useTheme } from '@/hooks/use-theme';
 
 export default function ExploreScreen() {
@@ -110,23 +107,19 @@ export default function ExploreScreen() {
       <Stack.Toolbar placement="right">
         <Stack.Toolbar.Button
           accessibilityLabel="Expo documentation"
-          icon={process.env.EXPO_OS === 'android' ? DescriptionIcon : undefined}
+          icon={toolbarIcons.documentation}
           onPress={() => void Linking.openURL('https://docs.expo.dev')}>
           Docs
         </Stack.Toolbar.Button>
-        <Stack.Toolbar.Menu
-          accessibilityLabel="Account"
-          icon={process.env.EXPO_OS === 'ios' ? 'person.crop.circle' : AccountCircleIcon}>
+        <Stack.Toolbar.Menu accessibilityLabel="Account" icon={toolbarIcons.account}>
           <Stack.Toolbar.MenuAction
-            icon={process.env.EXPO_OS === 'ios' ? 'person.crop.circle' : ManageAccountsIcon}
+            icon={toolbarIcons.manageAccount}
             onPress={() => router.push('/profile')}>
             Manage account
           </Stack.Toolbar.MenuAction>
           <Stack.Toolbar.MenuAction
             destructive
-            icon={
-              process.env.EXPO_OS === 'ios' ? 'rectangle.portrait.and.arrow.right' : LogoutIcon
-            }
+            icon={toolbarIcons.signOut}
             onPress={() => void signOut()}>
             Sign out
           </Stack.Toolbar.MenuAction>
