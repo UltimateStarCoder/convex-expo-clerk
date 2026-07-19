@@ -8,12 +8,14 @@ import { ThemedText } from '@/components/themed-text';
 import { useTheme } from '@/hooks/use-theme';
 
 export type ButtonProps = {
+  disabled?: boolean;
   label: string;
   onPress: (event: GestureResponderEvent) => void;
   variant?: 'primary' | 'secondary';
 };
 
 export function Button({
+  disabled = false,
   label,
   onPress,
   variant = 'primary',
@@ -24,6 +26,7 @@ export function Button({
   return (
     <Pressable
       accessibilityRole="button"
+      disabled={disabled}
       android_ripple={{
         color: isPrimary ? '#FFFFFF24' : theme.backgroundSelected,
       }}
@@ -39,7 +42,8 @@ export function Button({
             ? theme.primary
             : theme.backgroundSelected,
         },
-        pressed && styles.pressed,
+        pressed && !disabled && styles.pressed,
+        disabled && styles.disabled,
       ]}>
       <ThemedText
         themeColor={isPrimary ? 'onPrimary' : 'text'}
@@ -70,5 +74,8 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.78,
     transform: [{ scale: 0.99 }],
+  },
+  disabled: {
+    opacity: 0.55,
   },
 });

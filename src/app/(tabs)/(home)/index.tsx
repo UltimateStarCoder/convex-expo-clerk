@@ -1,7 +1,7 @@
 import { useClerk, useUser } from '@clerk/expo';
 import { useConvexAuth } from 'convex/react';
 import { Stack, useRouter } from 'expo-router';
-import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
@@ -33,7 +33,7 @@ export default function HomeScreen() {
         <Stack.Toolbar.Button
           accessibilityLabel="Add"
           icon={toolbarIcons.add}
-          onPress={() => Alert.alert('Add', 'Add action selected.')}
+          onPress={() => router.push('/(tabs)/(items)/item-form')}
         />
         <Stack.Toolbar.Menu accessibilityLabel="Account" icon={toolbarIcons.account}>
           <Stack.Toolbar.MenuAction

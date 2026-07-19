@@ -24,6 +24,14 @@ export default function TabLayout() {
         <NativeTabs.Trigger.Label>Explore</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="safari.fill" md="explore" />
       </NativeTabs.Trigger>
+
+      <NativeTabs.Trigger name="(items)">
+        <NativeTabs.Trigger.Label>Items</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon
+          sf={{ default: 'square.stack', selected: 'square.stack.fill' }}
+          md={{ default: 'inventory_2', selected: 'inventory_2' }}
+        />
+      </NativeTabs.Trigger>
     </NativeTabs>
   );
 }
